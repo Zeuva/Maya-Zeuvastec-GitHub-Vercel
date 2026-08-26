@@ -1,4 +1,0 @@
-module.exports = function handler(req, res) {
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.status(200).json({ ok: true, route: '/api/ping', runtime: 'vercel-node' });
-};
