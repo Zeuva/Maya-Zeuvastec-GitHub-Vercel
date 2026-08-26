@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Maya — Zeuvastec</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <section id="avatarStage">
+      <div id="tutor-3d-avatar"></div>
+      <div id="loading">Carregando Avatar 3D…</div>
+      <div id="state">Conectando…</div>
+      <div id="avatarLabel"><strong id="avatarName">Maya</strong><span id="avatarRole">Tutora de IA</span></div>
+    </section>
+
+    <section id="conversation" aria-live="polite">
+      <div id="messages"></div>
+      <div id="composer">
+        <button id="micBtn" title="Falar">🎙</button>
+        <input id="textInput" autocomplete="off" placeholder="Digite uma mensagem…">
+        <button id="sendBtn" title="Enviar">➤</button>
+      </div>
+      <div id="modes"><button id="englishBtn" class="active">🇺🇸 Professor de Inglês</button><button id="chatBtn">💬 Conversa</button></div>
+    </section>
+
+    <div id="toolbar">
+      <button id="profileBtn" title="Escolher Avatar">👤</button>
+      <button id="settingsBtn" title="Configurações">⚙</button>
+    </div>
+
+    <div id="profile" class="overlay hidden">
+      <div class="card">
+        <button id="closeProfile" class="xbtn">×</button>
+        <div class="eyebrow">ZEUVASTEC LANGUAGE</div>
+        <h1>Escolha seu Avatar</h1>
+        <p>Escolha homem ou mulher e dê o nome que quiser.</p>
+        <div class="avatar-options">
+          <button class="avatar-option selected" data-gender="female"><img src="maya-preview.png"><span>👩 Mulher</span></button>
+          <button class="avatar-option" data-gender="male"><img src="homem-preview.png"><span>👨 Homem</span></button>
+        </div>
+        <label>Nome do Avatar</label>
+        <input id="profileName" maxlength="24" value="Maya" placeholder="Maya, Alex, Daniel…">
+        <button id="saveProfile" class="primary">Continuar</button>
+        <small id="profileStatus"></small>
+      </div>
+    </div>
+
+    <div id="settings" class="overlay hidden">
+      <div class="card">
+        <button id="closeSettings" class="xbtn">×</button>
+        <div class="eyebrow">CONEXÃO</div>
+        <h2>Configuração do GPT</h2>
+        <p>A chave da OpenAI não fica no navegador. Ela deve ser configurada na Vercel como <b>OPENAI_API_KEY</b>.</p>
+        <div id="serverStatus">Verificando servidor…</div>
+        <label>Modelo</label>
+        <input id="model" value="gpt-5.4-mini" disabled>
+        <button id="checkServer" class="primary">Testar conexão</button>
+        <small id="settingsStatus"></small>
+      </div>
+    </div>
+  </main>
+  <script type="module" src="renderer.js"></script>
+</body>
+</html>
