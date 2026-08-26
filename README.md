@@ -25,3 +25,7 @@ Não coloque `OPENAI_API_KEY` em `renderer.js`, `index.html`, `.env` enviado ao 
 ## Vercel
 
 This version intentionally does not include a `functions` block in `vercel.json`. Vercel auto-detects `api/chat.js` as a Node.js Serverless Function. Configure `OPENAI_API_KEY` in Project Settings → Environment Variables. `OPENAI_MODEL` is optional and defaults to `gpt-5.4-mini`.
+
+## Diagnóstico
+- `GET /api/health` verifica se a Function está publicada e se `OPENAI_API_KEY` está disponível.
+- `POST /api/chat` sempre devolve JSON, inclusive em erros.
