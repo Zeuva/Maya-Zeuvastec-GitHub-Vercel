@@ -1,7 +1,12 @@
 {
   "name": "maya-zeuvastec-github-vercel",
-  "version": "1.4.0",
+  "version": "1.7.0",
   "private": true,
   "description": "Maya/Tutor Zeuvastec com Avatar 3D e GPT via Vercel.",
-  "scripts": {"dev": "vercel dev"}
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": "22.x"
+  }
 }
