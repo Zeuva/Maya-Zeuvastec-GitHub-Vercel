@@ -2,65 +2,159 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Maya — Zeuvastec</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Zeuvastec App</title>
+  <meta name="description" content="Maya, a assistente de IA da Zeuvastec, no celular.">
+  <meta name="theme-color" content="#06101c">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/favicon-v2.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon-v2.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="application-name" content="Zeuvastec App">
+  <meta name="apple-mobile-web-app-title" content="Zeuvastec App">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="idle">
   <main id="app">
-    <section id="avatarStage">
-      <div id="tutor-3d-avatar"></div>
-      <div id="loading">Carregando Avatar 3D…</div>
-      <div id="state">Conectando…</div>
-      <div id="avatarLabel"><strong id="avatarName">Maya</strong><span id="avatarRole">Tutora de IA</span></div>
-    </section>
-
-    <section id="conversation" aria-live="polite">
-      <div id="messages"></div>
-      <div id="composer">
-        <button id="micBtn" title="Falar">🎙</button>
-        <input id="textInput" autocomplete="off" placeholder="Digite uma mensagem…">
-        <button id="sendBtn" title="Enviar">➤</button>
+    <header id="topbar">
+      <div class="brand"><span class="dot"></span><span>ZEUVASTEC</span></div>
+      <div class="top-actions">
+        <button id="panelBtn" class="round" aria-label="Lembretes e anotações">☰</button>
+        <button id="settingsBtn" class="round" aria-label="Configurações">⚙</button>
       </div>
-      <div id="modes"><button id="englishBtn" class="active">🇺🇸 Professor de Inglês</button><button id="chatBtn">💬 Conversa</button></div>
+    </header>
+
+    <section id="stage">
+      <div class="ring ring-a" aria-hidden="true"></div>
+      <div class="ring ring-b" aria-hidden="true"></div>
+      <div id="avatar"></div>
+      <div id="loading">Carregando avatar…</div>
+      <div id="nameplate"><strong id="avatarName">Maya</strong><span>Assistente de IA</span></div>
+      <div id="state">Pronta para conversar</div>
     </section>
 
-    <div id="toolbar">
-      <button id="profileBtn" title="Escolher Avatar">👤</button>
-      <button id="settingsBtn" title="Configurações">⚙</button>
+    <section id="chat">
+      <div id="messages" role="log" aria-live="polite"></div>
+      <form id="composer" autocomplete="off">
+        <input id="textInput" enterkeyhint="send" placeholder="Digite ou toque no microfone…">
+        <button id="sendBtn" type="submit" class="send" aria-label="Enviar">➤</button>
+      </form>
+      <div id="controls">
+        <button id="stopBtn" class="pill" disabled>■ Parar</button>
+        <button id="micBtn" aria-label="Falar"><span class="mic-ico">🎙</span></button>
+        <button id="muteBtn" class="pill" aria-pressed="false">🔊 Voz</button>
+      </div>
+    </section>
+
+    <!-- Painel: lembretes e anotações -->
+    <div id="panel" class="sheet hidden" role="dialog" aria-label="Lembretes e anotações">
+      <div class="sheet-card">
+        <div class="sheet-head"><h2>Lembretes e anotações</h2><button class="x" data-close="panel" aria-label="Fechar">×</button></div>
+        <div id="panelContent"></div>
+        <p class="hint">Os lembretes tocam com o app aberto (ou em segundo plano recente). Com o app fechado, você recebe o aviso assim que abrir de novo.</p>
+      </div>
     </div>
 
-    <div id="profile" class="overlay hidden">
-      <div class="card">
-        <button id="closeProfile" class="xbtn">×</button>
-        <div class="eyebrow">ZEUVASTEC LANGUAGE</div>
-        <h1>Escolha seu Avatar</h1>
-        <p>Escolha homem ou mulher e dê o nome que quiser.</p>
-        <div class="avatar-options">
-          <button class="avatar-option selected" data-gender="female"><img src="maya-preview.png"><span>👩 Mulher</span></button>
-          <button class="avatar-option" data-gender="male"><img src="homem-preview.png"><span>👨 Homem</span></button>
+    <!-- Configurações / primeiro acesso -->
+    <div id="setup" class="sheet hidden" role="dialog" aria-label="Configurações">
+      <div class="sheet-card">
+        <div class="sheet-head">
+          <div><div class="eyebrow">ZEUVASTEC IA</div><h2 id="setupTitle">Configurar assistente</h2></div>
+          <button class="x" data-close="setup" id="closeSetup" aria-label="Fechar">×</button>
         </div>
-        <label>Nome do Avatar</label>
-        <input id="profileName" maxlength="24" value="Maya" placeholder="Maya, Alex, Daniel…">
-        <button id="saveProfile" class="primary">Continuar</button>
-        <small id="profileStatus"></small>
+
+        <div class="avatar-pick">
+          <button type="button" class="pick selected" data-gender="female"><img src="img/avatar-feminino.webp" alt=""><span>👩 Mulher</span></button>
+          <button type="button" class="pick" data-gender="male"><img src="img/avatar-masculino.webp" alt=""><span>👨 Homem</span></button>
+        </div>
+        <div class="grid2">
+          <label>Nome dela<input id="femaleName" maxlength="40" value="Maya"></label>
+          <label>Nome dele<input id="maleName" maxlength="40" value="Igor"></label>
+        </div>
+        <label>Seu nome<input id="userName" maxlength="40" placeholder="Como quer ser chamado"></label>
+
+        <div class="block">
+          <label for="apiKey">Chave do Google Gemini (grátis)</label>
+          <input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Cole aqui a chave (começa com AIza…)">
+          <details class="howto">
+            <summary>Como conseguir a chave</summary>
+            <ol>
+              <li>Abra <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> e entre com sua conta Google.</li>
+              <li>Toque em <b>Create API key</b> (Criar chave).</li>
+              <li>Copie a chave e cole no campo acima.</li>
+            </ol>
+            <p>A chave fica guardada só neste celular. Cada pessoa usa a própria chave.</p>
+          </details>
+        </div>
+
+        <div class="block">
+          <label for="ollamaKey">Reserva: chave do Ollama Cloud (opcional)</label>
+          <input id="ollamaKey" type="password" autocomplete="off" spellcheck="false" placeholder="Cole aqui a chave do Ollama">
+          <label style="margin-top:10px">Modelo do Ollama
+            <select id="ollamaModel"><option value="gpt-oss:120b">gpt-oss 120b (melhor)</option><option value="gpt-oss:20b">gpt-oss 20b (mais rápido)</option></select>
+          </label>
+          <details class="howto">
+            <summary>Para que serve</summary>
+            <p>Quando o limite grátis do Gemini acabar, a conversa continua pelo Ollama, sem erro. A chave é criada em <a href="https://ollama.com/settings/keys" target="_blank" rel="noopener">ollama.com/settings/keys</a> e fica guardada só neste celular. O Ollama não pesquisa na internet (clima, notícias, cotação).</p>
+          </details>
+        </div>
+
+        <div class="grid2">
+          <label>Voz
+            <select id="voiceMode">
+              <option value="device">Do celular (ilimitada)</option>
+              <option value="gemini">Natural (Gemini)</option>
+            </select>
+          </label>
+          <label>Respostas
+            <select id="responseStyle">
+              <option value="short">Curtas</option>
+              <option value="detailed">Detalhadas</option>
+            </select>
+          </label>
+        </div>
+        <label class="check"><input type="checkbox" id="vozDireta" checked> Voz direta: o Gemini ouve o áudio e responde (mais rápido e entende melhor)</label>
+        <div class="grid2" id="deviceVoiceRow">
+          <label>Voz dela (celular)
+            <select id="deviceVoice"><option value="">Automática</option></select>
+          </label>
+          <label>Voz dele (celular)
+            <select id="deviceVoiceMale"><option value="">Automática</option></select>
+          </label>
+        </div>
+        <p class="hint">A voz natural do Gemini soa mais humana (e já tem voz masculina para o Igor), mas a conta grátis tem limite diário; quando o limite acaba, o app usa a voz do celular sozinho. As vozes marcadas com ★ parecem do sexo certo. Se não aparecer nenhuma voz masculina, instale uma: no iPhone em Ajustes → Acessibilidade → Conteúdo Falado → Vozes → Português (Brasil); no Android em Configurações → Conversão de texto em voz → Instalar dados de voz → Português (Brasil).</p>
+
+        <div class="actions">
+          <button type="button" id="testVoice" class="ghost">Testar voz</button>
+          <button type="button" id="saveSetup" class="primary">Salvar e conversar</button>
+        </div>
+        <small id="setupStatus" role="status"></small>
+        <details class="howto danger">
+          <summary>Apagar dados deste celular</summary>
+          <p>Apaga conversa, lembretes, anotações e a chave guardados neste aparelho.</p>
+          <button type="button" id="wipeBtn" class="ghost">Apagar tudo</button>
+        </details>
       </div>
     </div>
 
-    <div id="settings" class="overlay hidden">
-      <div class="card">
-        <button id="closeSettings" class="xbtn">×</button>
-        <div class="eyebrow">CONEXÃO</div>
-        <h2>Configuração do GPT</h2>
-        <p>A chave da OpenAI não fica no navegador. Ela deve ser configurada na Vercel como <b>OPENAI_API_KEY</b>.</p>
-        <div id="serverStatus">Verificando servidor…</div>
-        <label>Modelo</label>
-        <input id="model" value="gpt-5.4-mini" disabled>
-        <button id="checkServer" class="primary">Testar conexão</button>
-        <small id="settingsStatus"></small>
-      </div>
+    <!-- Dica de instalação -->
+    <div id="installTip" class="toast hidden">
+      <span id="installText"></span>
+      <button id="installBtn" class="primary small hidden">Instalar</button>
+      <button class="x small" id="installClose" aria-label="Fechar">×</button>
     </div>
   </main>
-  <script type="module" src="renderer.js"></script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
